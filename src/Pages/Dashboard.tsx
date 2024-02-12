@@ -1,33 +1,36 @@
-import React, { useEffect } from "react";
 import Form from "../Components/Form/Form";
 import Loading from "../Components/Loading/Loading";
 import { formProduct } from "../Configs/ConfigsComponent";
-import ApiFireBase from "../API/ApiFireBase";
 import { useMyContext } from "../MyContext";
 import { iProduct } from "../Interface/iProducts";
+import React from "react";
+import ApiFireBase from "../API/ApiFireBase";
 
 export default function Dashboard(): JSX.Element {
-    const { product } = useMyContext();
+    const { product,classification, loading, setLoading } = useMyContext();
 
-    const handleSubmit = (formData: Record<string, any>) => {
+    const handleSubmit = async(formData: Record<string, any>) => {
+        setLoading(true);
         const api = new ApiFireBase('Produtos');
         const product: iProduct = {
-            classification:formData.classification,
-            description:formData.description,
-            price:parseFloat(formData.price),
-            observation:formData.observation || '',
-            units:parseInt(formData.units) || 1
+            classification: formData.classification,
+            description: formData.description,
+            price: parseFloat(formData.price),
+            observation: formData.observation || '',
+            units: parseInt(formData.units) || 1
         };
-        api.post(product);    
+        await api.post(product);    
+        console.log(product);
+        setLoading(false);
     };
 
     return (
-        <div className="p-2 col-6">
-            <Loading show={false} />
-            <Form config={formProduct(product)} onSubmit={handleSubmit} />
-            <button className='btn btn-danger' title='Adicione um produto' onClick={async () => {
-                console.log(product);
-            }}>Cancelamento</button>
-        </div>
+        <React.Fragment>
+            <Loading show={loading} />
+            <div className="p-2 col-6 h-100 overflow-auto">
+                <h1 className="h5">Cadastrar Produto:</h1>
+                <Form config={formProduct(classification)} onSubmit={handleSubmit} />
+            </div>
+        </React.Fragment>
     );
 }

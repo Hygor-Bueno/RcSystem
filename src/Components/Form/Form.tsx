@@ -7,20 +7,21 @@ interface FormProps {
     onSubmit: (data: Record<string, any>) => void;
 }
 
-function InputField({ type, label, keyDB, onChange }: iInputField): JSX.Element {
+function InputField({mandatory, type, label, keyDB, onChange }: iInputField): JSX.Element {
     return (
         <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}:</label>
-            <input type={type} className="form-control" id={label} name={keyDB} onChange={onChange} step={0.001} />
+            <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
+            <input required={mandatory} type={type} className="form-control" id={label} name={keyDB} onChange={onChange} step={0.001} />
         </div>
     );
 }
 
-function SelectField({ label, keyDB, options, onChange }: iSelectField): JSX.Element {
+function SelectField({mandatory, label, keyDB, options, onChange }: iSelectField): JSX.Element {
     return (
         <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}:</label>
-            <select className="form-control" id={label} name={keyDB} onChange={onChange}>
+            <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
+            <select required={mandatory} className="form-control" id={label} name={keyDB} onChange={onChange}>
+                <option hidden defaultValue=''></option>
                 {options?.map((option, idx) => (
                     <option key={idx} value={option.id}>{option.description}</option>
                 ))}
@@ -29,11 +30,11 @@ function SelectField({ label, keyDB, options, onChange }: iSelectField): JSX.Ele
     );
 }
 
-function TextAreaField({ label, keyDB, onChange }: iTextAreaField): JSX.Element {
+function TextAreaField({mandatory, label, keyDB, onChange }: iTextAreaField): JSX.Element {
     return (
-        <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}:</label>
-            <textarea className="form-control" id={label} name={keyDB} onChange={onChange} />
+        <div  className="mb-3">
+            <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
+            <textarea required={mandatory} className="form-control" id={label} name={keyDB} onChange={onChange} />
         </div>
     );
 }
@@ -57,15 +58,14 @@ export default function Form({ config, onSubmit }: FormProps): JSX.Element {
     return (
         <form onSubmit={handleSubmit}>
             {config.map((elementConfig, index) => {
-                const { type, element, label, options, name } = elementConfig;
-                {console.log(elementConfig)}
+                const { type, element, label, options, name,required } = elementConfig;
                 switch (element) {
                     case 'input':
-                        return <InputField key={index} keyDB={name} type={type || 'text'} label={label} onChange={handleChange} />;
+                        return <InputField mandatory={required} key={index} keyDB={name} type={type || 'text'} label={label} onChange={handleChange} />;
                     case 'select':
-                        return <SelectField key={index} keyDB={name} label={label} options={options} onChange={handleChange} />;
+                        return <SelectField mandatory={required} key={index} keyDB={name} label={label} options={options} onChange={handleChange} />;
                     case 'textarea':
-                        return <TextAreaField key={index} keyDB={name} label={label} onChange={handleChange} />;
+                        return <TextAreaField mandatory={required} key={index} keyDB={name} label={label} onChange={handleChange} />;
                     default:
                         return null;
                 }

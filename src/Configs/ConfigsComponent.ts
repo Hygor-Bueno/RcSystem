@@ -6,30 +6,35 @@ export const formProduct: (list: iClassification[]) => iConfigFormProduct[] = (l
             element: 'input',
             type: 'text',
             label: 'Produto',
-            name: 'description'
+            name: 'description',
+            required:true
         },
         {
             element: 'select',
             label: 'Classificação',
             options: list,
-            name: 'classification'
+            name: 'classification',
+            required:true
         },
         {
             element: 'input',
             type: 'number',
             label: 'Valor',
-            name: 'price'
+            name: 'price',
+            required:true
         },
         {
             element: 'textarea', // 'textArea' corrigido para 'textarea'
             label: 'Observações',
-            name: 'observation'
+            name: 'observation',
+            required:false
         },
         {
             element: 'input',
             type: 'number',
-            label: 'Unidades',
-            name: 'units'
+            label: 'Unidade(s)',
+            name: 'units',
+            required:true
         },
     ];
 };

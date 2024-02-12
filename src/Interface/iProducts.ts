@@ -17,4 +17,5 @@ export interface iConfigFormProduct {
     label: string;
     options?: Array<{ id: number; description: string }>;
     name:string;
+    required:boolean;
   }

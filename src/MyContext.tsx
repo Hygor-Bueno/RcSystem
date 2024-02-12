@@ -1,12 +1,19 @@
 
 import React, { createContext, useContext, useState, FC, ReactNode, useEffect } from 'react';
-import { iClassification } from './Interface/iProducts';
+import { iClassification, iProduct } from './Interface/iProducts';
 import ApiFireBase from './API/ApiFireBase';
 
 // Definindo o tipo dos dados no contexto
 interface MyContextProduct {
-  product: iClassification[];
-  updateproduct: (newProduct: iClassification[]) => void;
+  product: iProduct[];
+  updateProduct: (newProduct: iProduct[]) => void;
+  
+  classification:iClassification[];
+  updateClass: (newProduct: iClassification[]) => void;
+
+
+  loading: boolean;
+  setLoading: (step: boolean) => void;
 }
 
 interface Props {
@@ -17,27 +24,44 @@ export const MyContext = createContext<MyContextProduct | undefined>(undefined);
 
 // Componente que fornece o contexto
 export const MyProvider: FC<Props> = ({ children }) => {
-  const [product, setproduct] = useState<iClassification[]>(
-    [{
-      id:0,
+  const [product, setproduct] = useState<iProduct[]>([
+      {
+        classification: '',
+        description: '',
+        price: 0
+      }
+    ]);
+  const [classification, setClassification] = useState<iClassification[]>([
+    {
+      id: 0,
       description: ''
-    }]
-  );
+    }
+  ]);
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     async function init() {
-      const api = new ApiFireBase('Classificação');
-      let result:iClassification[] = await api.get();
-      setproduct(result);
+      const reqClass = new ApiFireBase('Classificação');
+      let resClassification: iClassification[] = await reqClass.get();
+
+      const reqProd = new ApiFireBase('Produtos');
+      let resProduct: iProduct[] = await reqProd.get();
+
+      setproduct(resProduct);
+      setClassification(resClassification);
     };
     init();
   }, []);
 
-  function updateproduct(newProduct: iClassification[]){
+  function updateProduct(newProduct: iProduct[]) {
     setproduct(newProduct);
+  };
+  function updateClass(newClass: iClassification[]) {
+    setClassification(newClass);
   };
 
   return (
-    <MyContext.Provider value={{ product, updateproduct }}>
+    <MyContext.Provider value={{ product, updateProduct,classification,updateClass, loading, setLoading }}>
       {children}
     </MyContext.Provider>
   );
