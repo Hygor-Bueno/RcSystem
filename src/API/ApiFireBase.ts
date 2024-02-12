@@ -5,18 +5,17 @@ export default class ApiFireBase {
   private readonly collectionRef: CollectionReference<DocumentData>;
   database;
   auth;
-  constructor() {
+  constructor(table:string) {
     const db = new Firebase();
     this.database = db.db;
     this.auth = db.auth;
-    this.collectionRef = collection(this.database, "Produtos");
+    this.collectionRef = collection(this.database, table);
   }
 
   async get(): Promise<any[]> {
     try {
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(this.collectionRef);
       const data: any[] = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log(data)
       return data;
     } catch (error) {
       console.error('Falha na busca', error);
@@ -25,6 +24,7 @@ export default class ApiFireBase {
   }
 
   async post(object: any): Promise<any | null> {
+    console.log(object)
     try {
       const docRef: DocumentReference<DocumentData> = await addDoc(this.collectionRef, object);
       return { id: docRef.id, ...object };

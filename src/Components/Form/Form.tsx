@@ -10,7 +10,7 @@ interface FormProps {
 function InputField({ type, label, keyDB, onChange }: iInputField): JSX.Element {
     return (
         <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}</label>
+            <label htmlFor={label} className="form-label">{label}:</label>
             <input type={type} className="form-control" id={label} name={keyDB} onChange={onChange} step={0.001} />
         </div>
     );
@@ -19,7 +19,7 @@ function InputField({ type, label, keyDB, onChange }: iInputField): JSX.Element 
 function SelectField({ label, keyDB, options, onChange }: iSelectField): JSX.Element {
     return (
         <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}</label>
+            <label htmlFor={label} className="form-label">{label}:</label>
             <select className="form-control" id={label} name={keyDB} onChange={onChange}>
                 {options?.map((option, idx) => (
                     <option key={idx} value={option.id}>{option.description}</option>
@@ -32,7 +32,7 @@ function SelectField({ label, keyDB, options, onChange }: iSelectField): JSX.Ele
 function TextAreaField({ label, keyDB, onChange }: iTextAreaField): JSX.Element {
     return (
         <div className="mb-3">
-            <label htmlFor={label} className="form-label">{label}</label>
+            <label htmlFor={label} className="form-label">{label}:</label>
             <textarea className="form-control" id={label} name={keyDB} onChange={onChange} />
         </div>
     );
@@ -58,18 +58,19 @@ export default function Form({ config, onSubmit }: FormProps): JSX.Element {
         <form onSubmit={handleSubmit}>
             {config.map((elementConfig, index) => {
                 const { type, element, label, options, name } = elementConfig;
+                {console.log(elementConfig)}
                 switch (element) {
                     case 'input':
                         return <InputField key={index} keyDB={name} type={type || 'text'} label={label} onChange={handleChange} />;
                     case 'select':
                         return <SelectField key={index} keyDB={name} label={label} options={options} onChange={handleChange} />;
-                    case 'textArea':
+                    case 'textarea':
                         return <TextAreaField key={index} keyDB={name} label={label} onChange={handleChange} />;
                     default:
                         return null;
                 }
             })}
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary">Salvar</button>
         </form>
     );
 }
