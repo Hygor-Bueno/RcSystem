@@ -6,7 +6,7 @@ export interface iInputField {
 }
 export interface iSelectField { 
     label: string; 
-    options?: Array<{ value: string; label: string }>; 
+    options?: Array<{ id: number; description: string }>; 
     keyDB: string;
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }

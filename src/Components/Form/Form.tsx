@@ -22,7 +22,7 @@ function SelectField({ label, keyDB, options, onChange }: iSelectField): JSX.Ele
             <label htmlFor={label} className="form-label">{label}</label>
             <select className="form-control" id={label} name={keyDB} onChange={onChange}>
                 {options?.map((option, idx) => (
-                    <option key={idx} value={option.value}>{option.label}</option>
+                    <option key={idx} value={option.id}>{option.description}</option>
                 ))}
             </select>
         </div>
@@ -38,7 +38,7 @@ function TextAreaField({ label, keyDB, onChange }: iTextAreaField): JSX.Element 
     );
 }
 
-function Form({ config, onSubmit }: FormProps): JSX.Element {
+export default function Form({ config, onSubmit }: FormProps): JSX.Element {
     const [formData, setFormData] = useState<Record<string, any>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -73,5 +73,3 @@ function Form({ config, onSubmit }: FormProps): JSX.Element {
         </form>
     );
 }
-
-export default Form;

@@ -1,6 +1,6 @@
 import './App.css';
 import ApiFireBase from './API/ApiFireBase';
-import Loading from './Components/Loading';
+import Loading from './Components/Loading/Loading';
 import FormComponent from './Components/Form/Form';
 import { iClassification } from './Interface/iProducts';
 import { formProduct } from './Configs/ConfigsComponent';

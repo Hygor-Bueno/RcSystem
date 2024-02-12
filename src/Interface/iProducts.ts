@@ -14,6 +14,6 @@ export interface iConfigFormProduct {
     element: string;
     type?: string;
     label: string;
-    options?: Array<{ value: string; label: string }>;
+    options?: Array<{ id: number; description: string }>;
     name:string;
   }

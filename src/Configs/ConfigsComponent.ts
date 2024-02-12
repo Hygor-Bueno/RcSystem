@@ -9,12 +9,7 @@ export const formProduct: iConfigFormProduct[] = [
     {
         element: 'select',
         label: 'Classificação',
-        options: [
-            { value: 'br', label: 'Brasil' },
-            { value: 'us', label: 'Estados Unidos' },
-            { value: 'uk', label: 'Reino Unido' },
-            { value: 'fr', label: 'França' },
-        ],
+        options: [],
         name:'classification'
     },
     {
