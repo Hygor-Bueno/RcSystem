@@ -11,9 +11,11 @@ interface MyContextProduct {
   classification:iClassification[];
   updateClass: (newProduct: iClassification[]) => void;
 
-
   loading: boolean;
   setLoading: (step: boolean) => void;
+
+  modal:boolean;
+  setModal:(step: boolean) => void;
 }
 
 interface Props {
@@ -38,6 +40,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
     }
   ]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
 
   useEffect(() => {
     async function init() {
@@ -61,7 +64,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    <MyContext.Provider value={{ product, updateProduct,classification,updateClass, loading, setLoading }}>
+    <MyContext.Provider value={{ product, updateProduct,classification,updateClass, loading, setLoading, modal,setModal }}>
       {children}
     </MyContext.Provider>
   );

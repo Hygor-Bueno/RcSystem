@@ -5,7 +5,10 @@ import { useMyContext } from "../../MyContext";
 import Form from "./Form";
 
 export default function FormProduct() {
-    const { classification, setLoading } = useMyContext();
+    const { classification, setLoading,setModal } = useMyContext();
+    const containerForm = {
+        maxHeight: '90%'
+    }
     const handleSubmit = async (formData: Record<string, any>) => {
         setLoading(true);
         const api = new ApiFireBase('Produtos');
@@ -21,9 +24,10 @@ export default function FormProduct() {
     };
 
     return (
-        <div className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded">
+        <div style={containerForm} className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded position-relative" >
+            <button onClick={()=>setModal(false)} className="position-absolute top-0 end-0  btn btn-danger">X</button>
             <h1 className="h5">Cadastrar Produto:</h1>
-            <Form config={formProduct(classification)} onSubmit={handleSubmit} />
+            <Form config={formProduct(classification)} onSubmit={handleSubmit} descButton={'Cadastrar'} />
         </div>
     );
 }

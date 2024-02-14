@@ -5,9 +5,10 @@ import { iInputField, iSelectField, iTextAreaField } from '../../Interface/iForm
 interface FormProps {
     config: Array<iConfigFormProduct>;
     onSubmit: (data: Record<string, any>) => void;
+    descButton?: string;
 }
 
-function InputField({mandatory, type, label, keyDB, onChange }: iInputField): JSX.Element {
+function InputField({ mandatory, type, label, keyDB, onChange }: iInputField): JSX.Element {
     return (
         <div className="mb-3">
             <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
@@ -16,7 +17,7 @@ function InputField({mandatory, type, label, keyDB, onChange }: iInputField): JS
     );
 }
 
-function SelectField({mandatory, label, keyDB, options, onChange }: iSelectField): JSX.Element {
+function SelectField({ mandatory, label, keyDB, options, onChange }: iSelectField): JSX.Element {
     return (
         <div className="mb-3">
             <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
@@ -30,16 +31,16 @@ function SelectField({mandatory, label, keyDB, options, onChange }: iSelectField
     );
 }
 
-function TextAreaField({mandatory, label, keyDB, onChange }: iTextAreaField): JSX.Element {
+function TextAreaField({ mandatory, label, keyDB, onChange }: iTextAreaField): JSX.Element {
     return (
-        <div  className="mb-3">
+        <div className="mb-3">
             <label htmlFor={label} className="form-label">{mandatory && <b className='text-danger'>*</b>}{label}:</label>
             <textarea required={mandatory} className="form-control" id={label} name={keyDB} onChange={onChange} />
         </div>
     );
 }
 
-export default function Form({ config, onSubmit }: FormProps): JSX.Element {
+export default function Form({ config, onSubmit, descButton }: FormProps): JSX.Element {
     const [formData, setFormData] = useState<Record<string, any>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -58,7 +59,7 @@ export default function Form({ config, onSubmit }: FormProps): JSX.Element {
     return (
         <form onSubmit={handleSubmit}>
             {config.map((elementConfig, index) => {
-                const { type, element, label, options, name,required } = elementConfig;
+                const { type, element, label, options, name, required } = elementConfig;
                 switch (element) {
                     case 'input':
                         return <InputField mandatory={required} key={index} keyDB={name} type={type || 'text'} label={label} onChange={handleChange} />;
@@ -70,7 +71,9 @@ export default function Form({ config, onSubmit }: FormProps): JSX.Element {
                         return null;
                 }
             })}
-            <button type="submit" className="btn btn-primary">Salvar</button>
+            <div className='d-flex justify-content-center'>
+                <button type="submit" className="btn btn-primary">{descButton || "Salvar"}</button>
+            </div>
         </form>
     );
 }
