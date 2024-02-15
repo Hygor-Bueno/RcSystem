@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { iConfigFormProduct } from '../../Interface/iProducts';
 import { iInputField, iSelectField, iTextAreaField } from '../../Interface/iForm';
+import Util from '../../Util';
 
 interface FormProps {
     config: Array<iConfigFormProduct>;
@@ -52,8 +53,14 @@ export default function Form({ config, onSubmit, descButton }: FormProps): JSX.E
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        onSubmit(formData);
+        try {
+            e.preventDefault();
+            onSubmit(formData);
+            const util = new Util();
+            util.clearFormFields();
+        } catch (error) {
+            console.error(error);    
+        }
     };
 
     return (

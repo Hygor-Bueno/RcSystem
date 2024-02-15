@@ -1,3 +1,7 @@
+export interface iRegisterClass {
+    id?:number;
+    description: string;
+}
 export interface iClassification {
     id:number;
     description: string;
