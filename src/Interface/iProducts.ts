@@ -14,6 +14,10 @@ export interface iProduct {
     observation?: string;
     units?: number;
 };
+export interface iCommands{
+    commands:number;
+    status:boolean;
+}
 
 export interface iConfigFormProduct {
     element: string;

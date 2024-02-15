@@ -47,3 +47,12 @@ export const formClass: iConfigFormProduct[] = [
         required: true
     }
 ];
+export const formCommands: iConfigFormProduct[] = [
+    {
+        element: 'input',
+        type: 'number',
+        label: 'Mesa',
+        name: 'commands',
+        required: true
+    }
+];

@@ -7,15 +7,18 @@ import ApiFireBase from './API/ApiFireBase';
 interface MyContextProduct {
   product: iProduct[];
   updateProduct: (newProduct: iProduct[]) => void;
-  
-  classification:iClassification[];
+
+  classification: iClassification[];
   updateClass: (newProduct: iClassification[]) => void;
 
   loading: boolean;
   setLoading: (step: boolean) => void;
 
-  modal:boolean;
-  setModal:(step: boolean) => void;
+  modal: boolean;
+  setModal: (step: boolean) => void;
+
+  loadClass: () => void;
+  loadProduct: () => void;
 }
 
 interface Props {
@@ -27,12 +30,12 @@ export const MyContext = createContext<MyContextProduct | undefined>(undefined);
 // Componente que fornece o contexto
 export const MyProvider: FC<Props> = ({ children }) => {
   const [product, setproduct] = useState<iProduct[]>([
-      {
-        classification: '',
-        description: '',
-        price: 0
-      }
-    ]);
+    {
+      classification: '',
+      description: '',
+      price: 0
+    }
+  ]);
   const [classification, setClassification] = useState<iClassification[]>([
     {
       id: 0,
@@ -44,17 +47,23 @@ export const MyProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function init() {
-      const reqClass = new ApiFireBase('Classificação');
-      let resClassification: iClassification[] = await reqClass.get();
-
-      const reqProd = new ApiFireBase('Produtos');
-      let resProduct: iProduct[] = await reqProd.get();
-
-      setproduct(resProduct);
-      setClassification(resClassification);
+      await loadClass();
+      await loadProduct();
     };
     init();
   }, []);
+
+  async function loadClass() {
+    const reqClass = new ApiFireBase('Classificação');
+    let resClassification: iClassification[] = await reqClass.get();
+    setClassification(resClassification);
+  }
+
+  async function loadProduct() {
+    const reqProd = new ApiFireBase('Produtos');
+    let resProduct: iProduct[] = await reqProd.get();
+    setproduct(resProduct);
+  }
 
   function updateProduct(newProduct: iProduct[]) {
     setproduct(newProduct);
@@ -64,7 +73,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    <MyContext.Provider value={{ product, updateProduct,classification,updateClass, loading, setLoading, modal,setModal }}>
+    <MyContext.Provider value={{ product, updateProduct, classification, updateClass, loading, setLoading, modal, setModal, loadProduct, loadClass}}>
       {children}
     </MyContext.Provider>
   );
