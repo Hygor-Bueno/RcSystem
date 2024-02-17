@@ -60,7 +60,7 @@ export default class Product implements iProduct {
     tableConfig(){
         return {
             "Descrição:":this._description,
-            "Classificação:": this.classification,
+            "Classificação:": this._classification || 'teste',
             "Preço:": parseFloat(this._price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
             "Unidade(s)": this._units
         }

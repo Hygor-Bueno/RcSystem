@@ -73,11 +73,9 @@ export const MyProvider: FC<Props> = ({ children }) => {
   async function loadProduct() {
     const reqProd = new ApiFireBase('Produtos');
     let resProduct: iProduct[] = await reqProd.get();
-    let list:iProduct[];
-    resProduct.forEach(item=>{
-      list.push(new Product(item));
-    })
-    // setproduct();
+     await reqProd.getByID("ZzB7tYNqRkZDnibsNRCJ");
+
+    setproduct(resProduct);
   }
   async function loadCommands() {
     const reqCommands = new ApiFireBase('Mesas');

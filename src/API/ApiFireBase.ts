@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, writeBatch, query, where, QuerySnapshot, DocumentData, CollectionReference, DocumentReference } from 'firebase/firestore';
+import { addDoc, collection, getDocs, writeBatch, query, where, QuerySnapshot, DocumentData, CollectionReference, DocumentReference, Firestore, getDoc } from 'firebase/firestore';
 import Firebase from '../DataBase/FireBase';
 
 export default class ApiFireBase {
@@ -14,6 +14,7 @@ export default class ApiFireBase {
 
   async get(): Promise<any[]> {
     try {
+
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(this.collectionRef);
       const data: any[] = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       return data;
@@ -22,6 +23,24 @@ export default class ApiFireBase {
       return [];
     }
   }
+
+  async getByID(itemId: string): Promise<any> {
+    try {
+        const itemRef: DocumentReference<DocumentData> = doc(this.database, 'Mesas', itemId);
+        const itemSnapshot = await getDoc(itemRef);
+        
+        if (itemSnapshot.exists()) {
+            const data = { ...itemSnapshot.data(), id: itemSnapshot.id };
+            return data;
+        } else {
+            console.error('O documento não existe');
+            return null;
+        }
+    } catch (error) {
+        console.error('Falha na busca', error);
+        return null;
+    }
+}
 
   async post(object: any): Promise<any | null> {
     console.log(object)
@@ -67,4 +86,8 @@ export default class ApiFireBase {
       console.error('Falha ao deletar.', error);
     }
   }
+}
+
+function doc(database: Firestore, table: any, itemId: string): DocumentReference<DocumentData, DocumentData> {
+  throw new Error('Function not implemented.');
 }
