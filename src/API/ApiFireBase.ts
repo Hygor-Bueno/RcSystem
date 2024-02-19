@@ -24,18 +24,13 @@ export default class ApiFireBase {
     }
   }
 
-  async getByID(itemId: string): Promise<any> {
+  async getOrder(commands: number): Promise<any> {
     try {
-        const itemRef: DocumentReference<DocumentData> = doc(this.database, 'Mesas', itemId);
-        const itemSnapshot = await getDoc(itemRef);
-        
-        if (itemSnapshot.exists()) {
-            const data = { ...itemSnapshot.data(), id: itemSnapshot.id };
-            return data;
-        } else {
-            console.error('O documento não existe');
-            return null;
-        }
+      const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
+      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+      const data: any[] = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+      return data[0];       
     } catch (error) {
         console.error('Falha na busca', error);
         return null;

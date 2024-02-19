@@ -8,11 +8,12 @@ interface Props {
     iconBtn?: IconProp;
     title: string;
     classBtn?: string;
+    btnDisabled?: boolean;
 }
-export default function Buttons({ onAction, description, title, typeBtn, iconBtn, classBtn }: Props): JSX.Element {
+export default function Buttons({ onAction, description, title, typeBtn, iconBtn, classBtn, btnDisabled }: Props): JSX.Element {
     return (
-        <button title={title} type={typeBtn} onClick={async () => await onAction()} className={classBtn}>
-            {iconBtn? <IconBtn/> : <DescBtn/>}
+        <button disabled={btnDisabled} title={title} type={typeBtn} onClick={async () => await onAction()} className={classBtn}>
+            {iconBtn ? <IconBtn /> : <DescBtn />}
         </button>
     );
     function IconBtn(): JSX.Element {

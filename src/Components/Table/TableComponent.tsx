@@ -19,7 +19,7 @@ const TableComponent = <T extends Record<string, any>>({ data}: Props<T>) => {
         {data.map((item, rowIndex) => (
           <tr key={rowIndex}>
             {Object.keys(data[0]).map((column, colIndex) => (
-              <td key={colIndex}>{String(item[column])}</td>
+              <td key={colIndex}>{item[column]}</td>
             ))}
           </tr>
         ))}
