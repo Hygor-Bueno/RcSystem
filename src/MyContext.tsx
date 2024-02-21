@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, FC, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, FC,useEffect } from 'react';
 import { iClassification, iCommands, iProduct } from './Interface/iProducts';
 import ApiFireBase from './API/ApiFireBase';
 import Product from './Class/Product';
@@ -42,7 +42,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   ]);
   const [classification, setClassification] = useState<iClassification[]>([
     {
-      id: 0,
+      id: '',
       description: ''
     }
   ]);
@@ -73,8 +73,6 @@ export const MyProvider: FC<Props> = ({ children }) => {
   async function loadProduct() {
     const reqProd = new ApiFireBase('Produtos');
     let resProduct: iProduct[] = await reqProd.get();
-     await reqProd.getByID("ZzB7tYNqRkZDnibsNRCJ");
-
     setproduct(resProduct);
   }
   async function loadCommands() {

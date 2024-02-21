@@ -3,7 +3,7 @@ export interface iRegisterClass {
     description: string;
 }
 export interface iClassification {
-    id:number;
+    id:string;
     description: string;
 }
 
@@ -23,7 +23,7 @@ export interface iConfigFormProduct {
     element: string;
     type?: string;
     label: string;
-    options?: Array<{ id: number; description: string }>;
+    options?: Array<{ id: string; description: string }>;
     name:string;
     required:boolean;
   }

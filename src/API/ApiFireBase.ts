@@ -23,24 +23,18 @@ export default class ApiFireBase {
       return [];
     }
   }
-
-  async getByID(itemId: string): Promise<any> {
+  async getOrderOpen(command:number): Promise<any[]> {
     try {
-        const itemRef: DocumentReference<DocumentData> = doc(this.database, 'Mesas', itemId);
-        const itemSnapshot = await getDoc(itemRef);
-        
-        if (itemSnapshot.exists()) {
-            const data = { ...itemSnapshot.data(), id: itemSnapshot.id };
-            return data;
-        } else {
-            console.error('O documento não existe');
-            return null;
-        }
+      const q = query(this.collectionRef, where("status", "==", true), where("command","==",command));
+      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+      const data: any[] = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      return data[0];
     } catch (error) {
-        console.error('Falha na busca', error);
-        return null;
+      console.error('Falha na busca', error);
+      return [];
     }
-}
+  }
+
 
   async post(object: any): Promise<any | null> {
     console.log(object)
