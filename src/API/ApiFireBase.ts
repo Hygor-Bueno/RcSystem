@@ -23,12 +23,14 @@ export default class ApiFireBase {
       return [];
     }
   }
-  async getOrderOpen(command:number): Promise<any[]> {
+
+  async getOrder(commands: number): Promise<any> {
     try {
-      const q = query(this.collectionRef, where("status", "==", true), where("command","==",command));
+      const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
       const data: any[] = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      return data[0];
+
+      return data[0];       
     } catch (error) {
       console.error('Falha na busca', error);
       return [];

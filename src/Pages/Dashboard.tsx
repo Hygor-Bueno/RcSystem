@@ -1,7 +1,7 @@
 import Loading from "../Components/Loading/Loading";
 import { useMyContext } from "../MyContext";
 import Modal from "../Components/Modal/Modal";
-import { faBox, faChartPie, faListCheck, faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { faBox, faChartPie, faListCheck,faCartShopping,faSearch } from '@fortawesome/free-solid-svg-icons'
 import Buttons from "../Components/Buttons/Buttons";
 import { useState } from "react";
 import FormProduct from "../Components/Form/FormProduct";
@@ -11,6 +11,7 @@ import TableComponent from "../Components/Table/TableComponent";
 import { iClassification, iCommands, iProduct } from "../Interface/iProducts";
 import Util from "../Util";
 import FormOrders from "../Components/Form/FormOrders";
+import ApiFireBase from "../API/ApiFireBase";
 
 export default function Dashboard(): JSX.Element {
     const { loading, setModal, product, classification, command } = useMyContext();
@@ -63,15 +64,14 @@ export default function Dashboard(): JSX.Element {
                 "Descrição:": item.description,
                 "Preço:": util.maskMoney(item.price),
                 "Unidade(s):": item.units,
-                "Classificação:": filterClass(item),
+                "Classificação:": getClassDesc(item.classification),
             });
         });
         return result;
     }
-
-    function filterClass(product: iProduct): string {
-        const result: iClassification = classification.filter((item: iClassification) => item.id == product.classification)[0];
-        console.log(result, product)
+    function getClassDesc(id:string):string{
+        let result:iClassification;
+        result = classification.filter((item:iClassification)=> item.id == id)[0]
         return result?.description || '';
     }
     function maskClassification(classif: iClassification[]): any[] {
@@ -89,7 +89,11 @@ export default function Dashboard(): JSX.Element {
         commands.forEach((item: iCommands) => {
             result.push({
                 "Nº Mesa:": item.commands,
-                "Status:": item.status ? 'Livre' : 'Ocupada'
+                "Status:": item.status ? 'Livre' : 'Ocupada',
+                "Detalhes": <Buttons btnDisabled={item.status} typeBtn="button" onAction={async() => {
+                    const order = new ApiFireBase('Pedidos');
+                    let reqTeste: any[] = await order.getOrder(item.commands);
+                }} title="Cadastrar Produtos" iconBtn={faSearch} classBtn="m-2 btn btn-success" />
             });
         });
         return result;
