@@ -5,7 +5,7 @@ import { useMyContext } from "../../MyContext";
 import Form from "./Form";
 
 export default function FormCommands() {
-    const {  setLoading, setModal } = useMyContext();
+    const {  setLoading, setModal,loadCommands } = useMyContext();
     const containerForm = {
         maxHeight: '90%'
     }
@@ -17,6 +17,7 @@ export default function FormCommands() {
             status: true
         };
         await api.post(commands);
+        await loadCommands();
         setLoading(false);
     };
 

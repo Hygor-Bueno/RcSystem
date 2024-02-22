@@ -15,6 +15,7 @@ export interface iProduct {
     units?: number;
 };
 export interface iCommands{
+    id?:string;
     commands:number;
     status:boolean;
 }

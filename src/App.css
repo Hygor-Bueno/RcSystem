@@ -4,3 +4,7 @@
   width: 100vw;
   overflow: hidden;
 }
+
+#formModal{
+  z-index: 1;
+}

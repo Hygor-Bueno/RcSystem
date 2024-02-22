@@ -13,7 +13,7 @@ interface MyContextProduct {
   updateClass: (item: iClassification[]) => void;
   
   command:iCommands[];
-  updateCommands: (item: iCommands[]) => void;
+  loadCommands: () => void;
 
   loading: boolean;
   setLoading: (step: boolean) => void;
@@ -93,7 +93,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    <MyContext.Provider value={{ product, updateProduct, classification, updateClass, loading, setLoading, modal, setModal, loadProduct, loadClass,command, updateCommands}}>
+    <MyContext.Provider value={{ product, updateProduct, classification, updateClass, loading, setLoading, modal, setModal, loadProduct, loadClass,command, loadCommands}}>
       {children}
     </MyContext.Provider>
   );
