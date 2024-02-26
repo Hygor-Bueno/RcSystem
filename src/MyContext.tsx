@@ -79,6 +79,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   async function loadCommands() {
     const reqCommands = new ApiFireBase('Mesas');
     let resCommands: iCommands[] = await reqCommands.get();
+    console.log(resCommands.sort((a,b)=> a.commands-b.commands));
     setCommand(resCommands);
   }
 

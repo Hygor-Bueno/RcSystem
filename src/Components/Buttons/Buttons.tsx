@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface Props {
     onAction: () => void;
     description?: string;
-    typeBtn?: "submit" | "reset" | "button" | undefined;
+    typeBtn: "submit" | "reset" | "button" | undefined;
     iconBtn?: IconProp;
     title: string;
     classBtn?: string;

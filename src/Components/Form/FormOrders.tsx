@@ -1,13 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ApiFireBase from "../../API/ApiFireBase";
-import { formProduct } from "../../Configs/ConfigsComponent";
-import { iProduct } from "../../Interface/iProducts";
+import { iCommands, iProduct } from "../../Interface/iProducts";
 import { useMyContext } from "../../MyContext";
-import Form from "./Form";
+import { useState } from "react";
+import Buttons from "../Buttons/Buttons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import BuildListOrder from "../Order/BuildListOrder";
 
 export default function FormOrders() {
     const { command, setLoading, setModal } = useMyContext();
-    console.log(command)
+    const [order, setOrder] = useState<boolean>(false);
+    const [editCommand, setEditCommand] = useState<iCommands>({
+        id: '',
+        commands: 0,
+        status: false
+    });
+    // let numberCommand:number = 0;
+
     const containerForm = {
         maxHeight: '90%'
     }
@@ -26,23 +35,43 @@ export default function FormOrders() {
     };
 
     return (
-        <div style={containerForm} className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded position-relative" >
-            <button onClick={() => setModal(false)} className="position-absolute top-0 end-0  btn btn-danger">X</button>
-            <h1 className="h5">Cadastrar Produto:</h1>
-            <SelectCommands />
+        <div style={containerForm} className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded position-relative d-flex flex-column align-items-center" >
+            <div className="w-100">
+                <button onClick={() => { setModal(false) }} className="position-absolute top-0 end-0  btn btn-danger">X</button>
+                <h1 className="h5">Registrar Pedidos:</h1>
+            </div>
+            {order ? <Order /> : <SelectCommands />}
         </div>
     );
     function SelectCommands(): JSX.Element {
         return (
-            <select onChange={(event) => console.log(event.currentTarget.value)} className="form-control my-4">
-                <option hidden defaultValue={''}>Selecione um mesa</option>
+            <div className="form-control col-12 row w-100 overflow-auto">
                 {command.map(item =>
-                    <option className="text-bold" value={item.commands} key={item.id}>
-                      {item.status ? 'Abrir' : 'Editar'} mesa {item.commands} 
-                    </option>
+                    <button onClick={() => { setOrder(!order); setEditCommand(item) }} className="flex-column col-6 btn align-items-center justify-content-center" key={item.id}>
+                        <FontAwesomeIcon className={`${item.status ? 'text-success' : 'text-danger'} mx-3`} icon={item.status ? 'check' : 'pencil'} />
+                        <p className="m-0">Mesa {String(item.commands).padStart(2, '0')}</p>
+                    </button>
                 )}
-            </select>
+            </div>
         )
     }
+    function Order(): JSX.Element {
+        return (
+            <div className="d-flex flex-column w-100">
+                <div>
+                    <Buttons classBtn="btn btn-outline-success" iconBtn={faPlus} title="Adicionar item..." onAction={() => console.log("Você está prestes a adicionar um item")} typeBtn="button" />
+                </div>
+                {/* {<BuildListOrder item={editCommand} />} */}
+                {<GetPRodutct/>}
+            </div>
+        );
+    }
     
+    function GetPRodutct(){
+        return(
+            <div>
+                HahhahHa
+            </div>
+        );
+    }
 }
