@@ -1,3 +1,5 @@
+import { iClassification } from "./Interface/iProducts";
+
 export default class Util{
     clearFormFields() {
         // Seleciona todos os campos de entrada, seleção e área de texto em um único querySelectorAll
@@ -17,6 +19,11 @@ export default class Util{
         });
     
         return valorFormatado;
+    }
+    getClassDesc(id:string,classification:iClassification[]):string{
+        let result:iClassification;
+        result = classification.filter((item:iClassification)=> item.id == id)[0];
+        return result?.description || '';
     }
     
 }    

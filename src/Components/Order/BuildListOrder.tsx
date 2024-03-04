@@ -1,29 +1,12 @@
-import { useEffect, useState } from "react";
-import { iCommands } from "../../Interface/iProducts";
 import { iListOrder, iOrders } from "../../Interface/iOrders";
-import ApiFireBase from "../../API/ApiFireBase";
 import Buttons from "../Buttons/Buttons";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
-    item: iCommands
+    commandList: iListOrder[]
 }
 export default function BuildListOrder(props: Props): JSX.Element {
-    const [list, setList] = useState<iListOrder[]>([
-        {
-            description: "",
-            quantity: 0,
-            value: 0,
-            id: ""
-        }
-    ])
-    useEffect(() => {
-        (async () => {
-            const reqOrder = new ApiFireBase('Pedidos');
-            let resOrder: iOrders = await reqOrder.getOrder(props.item.commands);
-            resOrder && setList(resOrder.list);
-        })();
-    }, []);
+
     const containerList ={
         overflow:'auto',
         maxHeight:'50vh'
@@ -37,7 +20,7 @@ export default function BuildListOrder(props: Props): JSX.Element {
                 <label className="col-3"><b>Editar:</b></label>
             </div>
             <div style={containerList} >
-                {list.map((item) =>
+                {props.commandList.map((item) =>
                     <div key={`item_${item.id}`} className="col-12 py-2">
                         <label className="col-5 text-capitalize">{item.description}</label>
                         <label className="col-2">{item.quantity}</label>
@@ -53,7 +36,7 @@ export default function BuildListOrder(props: Props): JSX.Element {
     );
     function calcTotal(): number {
         let result: number = 0;
-        list.forEach(item => result += item.value);
+        props.commandList.forEach(item => result += item.value);
         return result;
     }
 }

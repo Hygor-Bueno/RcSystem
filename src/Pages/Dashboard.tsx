@@ -64,16 +64,12 @@ export default function Dashboard(): JSX.Element {
                 "Descrição:": item.description,
                 "Preço:": util.maskMoney(item.price),
                 "Unidade(s):": item.units,
-                "Classificação:": getClassDesc(item.classification),
+                "Classificação:": util.getClassDesc(item.classification,classification),
             });
         });
         return result;
     }
-    function getClassDesc(id:string):string{
-        let result:iClassification;
-        result = classification.filter((item:iClassification)=> item.id == id)[0]
-        return result?.description || '';
-    }
+    
     function maskClassification(classif: iClassification[]): any[] {
         let result: any[] = [];
         classif.forEach((item: iClassification) => {

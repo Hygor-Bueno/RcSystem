@@ -8,6 +8,7 @@ export interface iClassification {
 }
 
 export interface iProduct {
+    id?:string;
     classification: string;
     description: string;
     price: number;
