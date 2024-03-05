@@ -10,7 +10,7 @@ import Util from "../../Util";
 import { iListOrder, iOrders } from "../../Interface/iOrders";
 
 export default function FormOrders() {
-    const { command, setLoading, setModal, product, classification } = useMyContext();
+    const { command, setModal, product, classification } = useMyContext();
     const [order, setOrder] = useState<boolean>(false);
     const [editCommand, setEditCommand] = useState<iCommands>({
         id: '',
@@ -18,26 +18,10 @@ export default function FormOrders() {
         status: false
     });
 
-
-
     const containerForm = {
         maxHeight: '90%'
     }
-    const handleSubmit = async (formData: Record<string, any>) => {
-        setLoading(true);
-        const api = new ApiFireBase('Produtos');
-        const product: iProduct = {
-            classification: formData.classification,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            observation: formData.observation || '',
-            units: parseInt(formData.units) || 1
-        };
-        await api.post(product);
-        setLoading(false);
-    };
-
-    return (
+   return (
         <div style={containerForm} className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded position-relative d-flex flex-column align-items-center" >
             <div className="w-100">
                 <button onClick={() => { setModal(false) }} className="position-absolute top-0 end-0  btn btn-danger">X</button>
@@ -60,31 +44,54 @@ export default function FormOrders() {
     }
     function Order(): JSX.Element {
         const [addItem, setAddItem] = useState<boolean>(false);
-        const [commandList, setCommandList] = useState<iListOrder[]>([
-            {
-                description: "",
-                quantity: 0,
-                value: 0,
-                id: ""
-            }
-        ])
+        const [commandList, setCommandList] = useState<iOrders>({
+            commands: 0,
+            list: [
+                {
+                    id: "",
+                    value: 0,
+                    quantity: 0,
+                    description: ""
+                }
+
+            ],
+            date: "",
+            status: false,
+            id: ""
+        });
+
 
         useEffect(() => {
             (async () => {
-                const reqOrder = new ApiFireBase('Pedidos');
-                let resOrder: iOrders = await reqOrder.getOrder(editCommand.commands);
-                resOrder && setCommandList(resOrder.list);
-            })()
+                try {
+                    const reqOrder = new ApiFireBase('Pedidos');
+                    let resOrder: iOrders = await reqOrder.getOrder(editCommand.commands);
+                    resOrder && setCommandList(resOrder);
+                } catch (error) {
+                    console.error(error);
+                }
+            })();
         }, []);
 
+        function updateList(list: iListOrder[]) {
+            let newCommand: iOrders = commandList;
+            newCommand.list = list || [] || undefined;
+            setCommandList({ ...newCommand });
+        };
         return (
             <div className="d-flex flex-column w-100">
                 <div>
-                    <Buttons classBtn="btn btn-outline-success" iconBtn={addItem ? faRotateBack : faPlus} title="Adicionar item..." onAction={() => {
+                    <Buttons classBtn="btn btn-outline-success" iconBtn={addItem ? faRotateBack : faPlus} title="Adicionar item..." onAction={async() => {
                         setAddItem(!addItem);
+                        if (addItem) {
+                            const id = commandList.commands || 0;
+                            delete commandList.id;
+                            const reqOrder = new ApiFireBase('Pedidos');
+                            await reqOrder.put(id,commandList.list);
+                        }
                     }} typeBtn="button" />
                 </div>
-                {addItem ? <GetProdutct commandList={commandList} setCommandList={setCommandList} /> : <BuildListOrder commandList={commandList} />}
+                {addItem ? <GetProdutct commandList={commandList.list} setCommandList={updateList} /> : <BuildListOrder commandList={commandList.list} />}
             </div>
         );
     }
@@ -196,13 +203,13 @@ export default function FormOrders() {
 
         function removeItemList(idItem: string) {
             let list = props.commandList;
-            let result: iListOrder[]=[];
+            let result: iListOrder[] = [];
             list.forEach(item => {
                 if (item.id != idItem) result.push(item);
             });
             props.setCommandList([...result]);
         }
-        
+
         function getItemQuantity(idItem: string): number {
             let result: number = 0;
             let item = getItemForId(idItem);

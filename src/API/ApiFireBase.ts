@@ -39,7 +39,6 @@ export default class ApiFireBase {
 
 
   async post(object: any): Promise<any | null> {
-    console.log(object)
     try {
       const docRef: DocumentReference<DocumentData> = await addDoc(this.collectionRef, object);
       return { id: docRef.id, ...object };
@@ -49,14 +48,14 @@ export default class ApiFireBase {
     }
   }
 
-  async put(id: string, description: string): Promise<void> {
+  async put(commands: number, value: any): Promise<void> {
     try {
-      const q = query(this.collectionRef, where("description", "==", id));
+      const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
       const batch = writeBatch(this.database);
 
       querySnapshot.forEach(doc => {
-        batch.update(doc.ref, { description: description });
+        batch.update(doc.ref, { list: value });
       });
 
       await batch.commit();
