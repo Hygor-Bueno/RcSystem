@@ -48,14 +48,14 @@ export default class ApiFireBase {
     }
   }
 
-  async put(commands: number, value: any): Promise<void> {
+  async putOrder(commands: number, value: any): Promise<void> {
     try {
       const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
       const batch = writeBatch(this.database);
 
       querySnapshot.forEach(doc => {
-        batch.update(doc.ref, { list: value });
+        batch.update(doc.ref, value );
       });
 
       await batch.commit();

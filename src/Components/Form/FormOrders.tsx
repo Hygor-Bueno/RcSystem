@@ -21,20 +21,20 @@ export default function FormOrders() {
     const containerForm = {
         maxHeight: '90%'
     }
-   return (
+    return (
         <div style={containerForm} className="p-2 col-10 col-sm-8 col-md-6 col-lg-3 col-xl-3 overflow-auto bg-white rounded position-relative d-flex flex-column align-items-center" >
             <div className="w-100">
                 <button onClick={() => { setModal(false) }} className="position-absolute top-0 end-0  btn btn-danger">X</button>
                 <h1 className="h5">Registrar Pedidos:</h1>
             </div>
-            {order ? <Order /> : <SelectCommands />}
+            {order ? <Order {...editCommand} /> : <SelectCommands />}
         </div>
     );
     function SelectCommands(): JSX.Element {
         return (
             <div className="form-control col-12 row w-100 overflow-auto">
                 {command.map(item =>
-                    <button onClick={() => { setOrder(!order); setEditCommand(item) }} className="flex-column col-6 btn align-items-center justify-content-center" key={`button_Order_${item.id}`}>
+                    <button onClick={() => { setOrder(!order); setEditCommand(item); }} className="flex-column col-6 btn align-items-center justify-content-center" key={`button_Order_${item.id}`}>
                         <FontAwesomeIcon className={`${item.status ? 'text-success' : 'text-danger'} mx-3`} icon={item.status ? 'check' : 'pencil'} />
                         <p className="m-0">Mesa {String(item.commands).padStart(2, '0')}</p>
                     </button>
@@ -42,22 +42,23 @@ export default function FormOrders() {
             </div>
         )
     }
-    function Order(): JSX.Element {
+
+    interface iProps {
+        id?: string,
+        commands: number,
+        status: boolean
+    }
+
+    function Order(props: iProps): JSX.Element {
         const [addItem, setAddItem] = useState<boolean>(false);
         const [commandList, setCommandList] = useState<iOrders>({
-            commands: 0,
+            commands: props.commands,
             list: [
-                {
-                    id: "",
-                    value: 0,
-                    quantity: 0,
-                    description: ""
-                }
 
             ],
             date: "",
             status: false,
-            id: ""
+            id: props.id || ''
         });
 
 
@@ -81,14 +82,28 @@ export default function FormOrders() {
         return (
             <div className="d-flex flex-column w-100">
                 <div>
-                    <Buttons classBtn="btn btn-outline-success" iconBtn={addItem ? faRotateBack : faPlus} title="Adicionar item..." onAction={async() => {
+                    <Buttons classBtn="btn btn-outline-success" iconBtn={addItem ? faRotateBack : faPlus} title="Adicionar item..." onAction={async () => {
                         setAddItem(!addItem);
-                        if (addItem) {
+                        if (commandList.status && addItem) {
+                            console.log("Atualizar commanda");
                             const id = commandList.commands || 0;
                             delete commandList.id;
                             const reqOrder = new ApiFireBase('Pedidos');
-                            await reqOrder.put(id,commandList.list);
+                            await reqOrder.putOrder(id, commandList);
+                        } else if(addItem){
+                            commandList.status = true;
+                            const newOrder = new ApiFireBase('Pedidos');
+                            let result = await newOrder.post(commandList);
+                            console.log(result);
                         }
+
+                        // if (addItem) {
+                        //     const id = commandList.commands || 0;
+                        //     delete commandList.id;
+                        //     const reqOrder = new ApiFireBase('Pedidos');
+                        //     await reqOrder.put(id,commandList);
+                        // }
+
                     }} typeBtn="button" />
                 </div>
                 {addItem ? <GetProdutct commandList={commandList.list} setCommandList={updateList} /> : <BuildListOrder commandList={commandList.list} />}
