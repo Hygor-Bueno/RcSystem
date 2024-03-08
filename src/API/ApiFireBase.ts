@@ -48,6 +48,38 @@ export default class ApiFireBase {
     }
   }
 
+  async putCommand(commands: number, value: any): Promise<void> {
+    try {
+      const q = query(this.collectionRef, where("commands", "==", commands));
+      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+      const batch = writeBatch(this.database);
+
+      querySnapshot.forEach(doc => {
+        batch.update(doc.ref, value );
+      });
+      await batch.commit();
+      console.log('Atualizado com sucesso.');
+    } catch (error) {
+      console.error('Falha ao atualizar.', error);
+    }
+  }
+
+  async closeOrder(commands: number): Promise<void>{
+    try {
+    const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
+      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+      const batch = writeBatch(this.database);
+
+      querySnapshot.forEach(doc => {
+        batch.update(doc.ref, {status:false} );
+      });
+
+      await batch.commit();
+      console.log('Atualizado com sucesso.');
+    } catch (error) {
+      console.error('Falha ao atualizar.', error);
+    }
+  }
   async putOrder(commands: number, value: any): Promise<void> {
     try {
       const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
@@ -65,12 +97,12 @@ export default class ApiFireBase {
     }
   }
 
-  async delete(id: string): Promise<void> {
+  async deleteOrder(commands:number): Promise<void> {
     try {
-      const q = query(this.collectionRef, where("description", "==", id));
+      const q = query(this.collectionRef, where("commands", "==", commands),where("status","==",true));
       const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
       const batch = writeBatch(this.database);
-
+      
       querySnapshot.forEach(doc => {
         batch.delete(doc.ref);
       });

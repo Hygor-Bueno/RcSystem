@@ -1,8 +1,7 @@
 
-import React, { createContext, useContext, useState, FC,useEffect } from 'react';
+import { createContext, useContext, useState, FC,useEffect } from 'react';
 import { iClassification, iCommands, iProduct } from './Interface/iProducts';
 import ApiFireBase from './API/ApiFireBase';
-import Product from './Class/Product';
 
 // Definindo o tipo dos dados no contexto
 interface MyContextProduct {
@@ -79,7 +78,7 @@ export const MyProvider: FC<Props> = ({ children }) => {
   async function loadCommands() {
     const reqCommands = new ApiFireBase('Mesas');
     let resCommands: iCommands[] = await reqCommands.get();
-    console.log(resCommands.sort((a,b)=> a.commands-b.commands));
+    resCommands.sort((a,b)=> a.commands-b.commands);
     setCommand(resCommands);
   }
 

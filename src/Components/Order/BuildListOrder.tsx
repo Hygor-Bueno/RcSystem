@@ -1,6 +1,8 @@
-import { iListOrder, iOrders } from "../../Interface/iOrders";
+import ApiFireBase from "../../API/ApiFireBase";
+import { iListOrder } from "../../Interface/iOrders";
 
 interface Props {
+    idCommand:number;
     commandList: iListOrder[]
 }
 export default function BuildListOrder(props: Props): JSX.Element {
@@ -29,6 +31,10 @@ export default function BuildListOrder(props: Props): JSX.Element {
             <div className="h-50">
                 <b>Total:</b> {calcTotal().toFixed(2)}
             </div>
+            <button  className="btn btn-primary my-4" onClick={async ()=>{
+                const req = new ApiFireBase('Pedidos');
+                req.closeOrder(props.idCommand);
+            }}>Finalizar</button>
         </div>
     );
     function calcTotal(): number {
